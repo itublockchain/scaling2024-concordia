@@ -15,7 +15,6 @@ contract FindTeam {
         Developer,
         Investor
     }
-    // ayrı ayrı enumda mı tutalım,job enumunda mı tutalım
 
     enum Field {
         Defi,
@@ -106,7 +105,28 @@ contract FindTeam {
         // return newProject;
     }
 
-    function create_account(string calldata nickname, string[] calldata links, string calldata bio, Job job) public {}
+    function create_account(
+    string calldata nickname,
+    string calldata image_url,
+    SocialLink[] calldata links,
+    string calldata bio,
+    Job job
+) public {
+    
+    Account memory newAccount = Account(
+        msg.sender,
+        nickname,
+        image_url,
+        bio,
+        links , 
+        "" ,
+        "" ,
+        job
+    );
+
+    accounts.push(newAccount);
+}
+
 
     function apply_for_project(string calldata project_name) public {}
 
@@ -133,7 +153,7 @@ contract FindTeam {
     function closeProject(string calldata _project_name, string calldata description) public {
         for(uint256 = i; i < projects.length; i++) {
             if(keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
-                projects[i].close_detail = CloseDetail[true,description];
+                projects[i].close_detail = CloseDetail(true,description);
                 break;
             }
         }
