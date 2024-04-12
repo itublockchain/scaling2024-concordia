@@ -130,8 +130,78 @@ contract FindTeam {
 
     function apply_for_project(string calldata project_name) public {}
 
-    function accept_application(string calldata project_name, address account_id) public {}
-    function reject_application(string calldata project_name, address account_id) public {}
+    function accept_application(string calldata project_name, address account_id) public {
+        
+        uint256 index;
+
+    for (uint256 i = 0; i < projects.length; i++) {
+        if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
+            index = i;
+            break;
+        }
+    }
+
+        require(msg.sender == projects[index].owner, "Only project owner can accept applications");
+        
+        bool isApplier = false;
+
+    for (uint256 i = 0; i < projects[index].appliers.length; i++) {
+        if (projects[index].appliers[i] == account_id) {
+            isApplier = true;
+            break;
+        }
+    }
+    
+    require(isApplier, "Account has not applied for this project");
+
+    projects[index].team_members.push(account_id);
+
+    for (uint256 i = 0; i < projects[index].appliers.length; i++) {
+        if (projects[index].appliers[i] == account_id) {
+           projects[index].appliers[i] = projects[projects.length - 1];
+           projects.appliers[].pop();
+       }
+            break;
+        }
+    }
+
+    }
+    
+    function reject_application(string calldata project_name, address account_id) public {
+                
+        uint256 index;
+
+    for (uint256 i = 0; i < projects.length; i++) {
+        if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
+            index = i;
+            break;
+        }
+    }
+
+        require(msg.sender == projects[index].owner, "Only project owner can accept applications");
+        
+        bool isApplier = false;
+
+    for (uint256 i = 0; i < projects[index].appliers.length; i++) {
+        if (projects[index].appliers[i] == account_id) {
+            isApplier = true;
+            break;
+        }
+    }
+    
+    require(isApplier, "Account has not applied for this project");
+
+    for (uint256 i = 0; i < projects[index].appliers.length; i++) {
+        if (projects[index].appliers[i] == account_id) {
+           projects[index].appliers[i] = projects[projects.length - 1];
+           projects.appliers[].pop();
+       }
+            break;
+        }
+    }
+
+    }
+    }
 
     //function addParticipant() public{}
 
