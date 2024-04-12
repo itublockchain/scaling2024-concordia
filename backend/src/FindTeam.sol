@@ -130,5 +130,12 @@ contract FindTeam {
         SocialLink[] calldata social_links
     ) public returns (Account memory) {}
 
-    function closeProject(string calldata project_name, string calldata description) public {}
+    function closeProject(string calldata _project_name, string calldata description) public {
+        for(uint256 = i; i < projects.length; i++) {
+            if(keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
+                projects[i].close_detail = CloseDetail[true,description];
+                break;
+            }
+        }
+    }
 }
