@@ -123,7 +123,7 @@ contract FindTeam {
     string calldata bio,
     Job job
 ) public {
-    
+    require(accountmap[msg.sender].account_id != 0, "this user has created an account before");
     Account storage newAccount = accountmap[msg.sender];
 
     newAccount.account_id = msg.sender;
@@ -146,7 +146,8 @@ contract FindTeam {
     function apply_for_project(string calldata project_name) public {}
 
     function accept_application(string calldata _project_name, address account_id) public {
-        
+
+        require(accountmap[msg.sender].account_id == address(0),"applier does not created account");
         uint256 index;
 
     for (uint256 i = 0; i < projects.length; i++) {
@@ -233,6 +234,8 @@ contract FindTeam {
     function closeProject(string calldata _project_name, string calldata description) public {
         for(uint256 i = 0; i < projects.length; i++) {
             if(keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
+                require(projects[i].owner != msg.sender, "You are not the owner");
+                require(projects[i].close_detail.is_closed == true, "Project already closed");
                 projects[i].close_detail = CloseDetail(true,description);
                 break;
             }
