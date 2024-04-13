@@ -72,7 +72,6 @@ contract FindTeam {
     }
 
     mapping(address => Account) public accountmap;
-    Account[] public accounts;
     Project[] public projects;
 
     function list_projects(Field[] calldata fields, Job job) public view returns (ListProject[] memory) {
@@ -140,7 +139,7 @@ contract FindTeam {
         }));
     }
 
-    accounts.push(newAccount);
+    accountmap[msg.sender] = newAccount;
 }
 
 
@@ -169,8 +168,6 @@ contract FindTeam {
     }
 
     require(isApplier, "Account has not applied for this project");
-
-    projects[index].team_members.push(account_id);
 
     for (uint256 i = 0; i < projects[index].appliers.length; i++) {
     if (projects[index].appliers[i] == account_id) {
