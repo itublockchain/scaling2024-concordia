@@ -225,8 +225,14 @@ contract FindTeam {
         accountmap[msg.sender] = newAccount;
     }
 
-    function apply_for_project(string calldata project_name) public {}
-
+    function apply_for_project(string calldata project_name) public {
+        for (uint256 i = 0; i < projects.length; i++) {
+            if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(project_name))) {
+                require(projects[i].owner != msg.sender, "Owner of the project cannot apply!");
+                projects[i].appliers.push(msg.sender);
+            }
+        }
+    }
     function accept_application(string calldata _project_name, address account_id) public {
         require(accountmap[msg.sender].account_id == address(0), "applier does not created account");
         uint256 index;
@@ -302,9 +308,21 @@ contract FindTeam {
         string calldata project_image,
         string[] calldata project_detail_images,
         Want calldata wanted_jobs,
-        string calldata description
-    ) public returns (Project memory) {}
-
+        string calldata description,
+        Field[] calldata fields
+    ) public returns (Project memory) {
+        for (uint256 i = 0; i < projects.length; i++) {
+            if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(project_name))) {
+                require(msg.sender==projects[i].owner,"You are not the owner of the project");
+                projects[i].project_image=project_image;
+                projects[i].project_detail_images=project_detail_images;
+                projects[i].wanted_jobs=wanted_jobs;
+                projects[i].description=description;
+                projects[i].fields=fields;
+                return projects[i];
+            }
+        }
+    }
     function editAccount(
         address account_id,
         string calldata nickname,
@@ -312,7 +330,7 @@ contract FindTeam {
         string calldata bio,
         SocialLink[] calldata social_links
     ) public returns (Account memory) {
-        Account memory changeAccount = accountmap[account_id];
+        Account storage changeAccount = accountmap[account_id];
         changeAccount.nickname = nickname;
         changeAccount.profile_image = profile_image;
         changeAccount.bio = bio;
