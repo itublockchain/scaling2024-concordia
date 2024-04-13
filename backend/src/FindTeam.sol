@@ -123,7 +123,7 @@ contract FindTeam {
     string calldata bio,
     Job job
 ) public {
-    require(accountmap[msg.sender].account_id != 0, "this user has created an account before");
+    require(accountmap[msg.sender].account_id != address(0), "this user has created an account before");
     Account storage newAccount = accountmap[msg.sender];
 
     newAccount.account_id = msg.sender;
@@ -177,6 +177,8 @@ contract FindTeam {
         projects[index].appliers.pop();
         break;
     }
+
+    accountmap[msg.sender].joined_project_ids.push(projects[index].project_name);
 }
     }
     
@@ -213,7 +215,6 @@ contract FindTeam {
     }
 }
     }
-
     //function addParticipant() public{}
 
     function editProject(
