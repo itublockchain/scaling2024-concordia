@@ -84,13 +84,14 @@ contract FindTeam {
     //==========================================
 
     function show_project_info(string calldata _project_name) public view returns (Project memory) {
-        uint256 index;
-        for (uint256 i = 0; i < projects.length; i++) {
+    for (uint256 i = 0; i < projects.length; i++) {
         if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
-        return projects[index];
+            return projects[i];
         }
     }
-    }
+    // Add a default return statement if project not found
+    return Project("", address(0), "", new string[](0), new address[](0), new address[](0), Want(false, false, false, false), "", CloseDetail(false, ""));
+}
 
     function show_account_info(address _account_id) public view returns (Account memory) {
         return accountmap[_account_id];
@@ -124,16 +125,20 @@ contract FindTeam {
     Job job
 ) public {
     
-    Account memory newAccount = Account(
-        msg.sender,
-        nickname,
-        image_url,
-        bio,
-        links , 
-        new string[](0),
-        new string[](0),
-        job
-    );
+    Account storage newAccount = accountmap[msg.sender];
+
+    newAccount.account_id = msg.sender;
+    newAccount.nickname = nickname;
+    newAccount.profile_image = image_url;
+    newAccount.bio = bio;
+    newAccount.job = job;
+
+    for (uint i = 0; i < links.length; i++) {
+        newAccount.social_links.push(SocialLink({
+            name: links[i].name,
+            url: links[i].url
+        }));
+    }
 
     accounts.push(newAccount);
 }
