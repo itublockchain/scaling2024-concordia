@@ -81,9 +81,18 @@ contract FindTeam {
     function list_finished_projects(Field[] calldata fields, Job job) public view {} //
     //==========================================
 
-    function show_project_info(string calldata project_name) public view returns (Project memory) {}
+    function show_project_info(string calldata _project_name) public view returns (Project memory) {
+        uint256 index;
+        for (uint256 i = 0; i < projects.length; i++) {
+        if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
+        return projects[index];
+        }
+    }
+    }
 
-    function show_account_info(address account_id) public view returns (Account memory) {}
+    function show_account_info(address _account_id) public view returns (Account memory) {
+        return accounts[_account_id];
+    }
 
     function create_project(
         string calldata name,
@@ -130,7 +139,7 @@ contract FindTeam {
 
     function apply_for_project(string calldata project_name) public {}
 
-    function accept_application(string calldata project_name, address account_id) public {
+    function accept_application(string calldata _project_name, address account_id) public {
         
         uint256 index;
 
@@ -151,7 +160,7 @@ contract FindTeam {
             break;
         }
     }
-    
+
     require(isApplier, "Account has not applied for this project");
 
     projects[index].team_members.push(account_id);
@@ -164,10 +173,8 @@ contract FindTeam {
             break;
         }
     }
-
-    }
     
-    function reject_application(string calldata project_name, address account_id) public {
+    function reject_application(string calldata _project_name, address account_id) public {
                 
         uint256 index;
 
@@ -200,9 +207,6 @@ contract FindTeam {
         }
     }
 
-    }
-    }
-
     //function addParticipant() public{}
 
     function editProject(
@@ -228,4 +232,4 @@ contract FindTeam {
             }
         }
     }
-}
+    }
