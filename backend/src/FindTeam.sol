@@ -226,10 +226,20 @@ contract FindTeam {
 
     function editAccount(
         address account_id,
+        string calldata nickname,
         string calldata profile_image,
         string calldata bio,
         SocialLink[] calldata social_links
-    ) public returns (Account memory) {}
+    ) public returns (Account memory) {
+
+        Account memory changeAccount = accountmap[account_id];
+        changeAccount.nickname=nickname;
+        changeAccount.profile_image=profile_image;
+        changeAccount.bio=bio;
+        changeAccount.social_links=social_links;
+
+        return changeAccount;
+    }
 
     function closeProject(string calldata _project_name, string calldata description) public {
         for(uint256 i = 0; i < projects.length; i++) {
