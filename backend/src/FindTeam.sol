@@ -151,6 +151,7 @@ contract FindTeam {
                 temp_projects[temp_projects.length] = temp_project;
             }
         }
+        return temp_projects;
     }
 
     //==========================================
@@ -191,7 +192,6 @@ contract FindTeam {
         project.owner = msg.sender;
         project.project_image = project_image;
         project.project_detail_images = project_detail_images;
-        project.appliers[0] = msg.sender;
         project.wanted_jobs = wanted_jobs;
         project.description = description;
         project.close_detail = close_detail;
@@ -199,7 +199,9 @@ contract FindTeam {
 
         projects.push(project);
 
-        return projects[projects.length];
+        projects[projects.length - 1].appliers.push(msg.sender);
+
+        return projects[projects.length - 1];
     }
 
     function create_account(
@@ -233,6 +235,7 @@ contract FindTeam {
             }
         }
     }
+
     function accept_application(string calldata _project_name, address account_id) public {
         require(accountmap[msg.sender].account_id == address(0), "applier does not created account");
         uint256 index;
@@ -306,23 +309,25 @@ contract FindTeam {
     function editProject(
         string calldata project_name,
         string calldata project_image,
-        string[] calldata project_detail_images,
+        string[] memory project_detail_images,
         Want calldata wanted_jobs,
         string calldata description,
-        Field[] calldata fields
+        Field[] memory fields
     ) public returns (Project memory) {
         for (uint256 i = 0; i < projects.length; i++) {
             if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(project_name))) {
-                require(msg.sender==projects[i].owner,"You are not the owner of the project");
-                projects[i].project_image=project_image;
-                projects[i].project_detail_images=project_detail_images;
-                projects[i].wanted_jobs=wanted_jobs;
-                projects[i].description=description;
-                projects[i].fields=fields;
+                require(msg.sender == projects[i].owner, "You are not the owner of the project");
+                projects[i].project_image = project_image;
+                projects[i].project_detail_images = project_detail_images;
+                projects[i].wanted_jobs = wanted_jobs;
+                projects[i].description = description;
+                projects[i].fields = fields;
                 return projects[i];
             }
         }
+        revert("the project does not exist");
     }
+
     function editAccount(
         address account_id,
         string calldata nickname,
@@ -334,7 +339,9 @@ contract FindTeam {
         changeAccount.nickname = nickname;
         changeAccount.profile_image = profile_image;
         changeAccount.bio = bio;
-        changeAccount.social_links = social_links;
+        for (uint256 i = 0; i < social_links.length; i++) {
+            changeAccount.social_links.push(SocialLink({name: social_links[i].name, url: social_links[i].url}));
+        }
 
         return changeAccount;
     }
