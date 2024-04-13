@@ -171,23 +171,35 @@ contract FindTeam {
     }
 
     function create_project(
-        string calldata name,
-        Want calldata fields,
+        string calldata project_name,
         string calldata project_image,
         string[] calldata project_detail_images,
-        string calldata description
+        Want calldata wanted_jobs,
+        string calldata description,
+        Field[] calldata fields
     ) public returns (Project memory) {
-        // address[] memory team_members;
-        // address[] memory appliers;
-        // Project memory newProject = Project({
-        //     project_name: name,
-        //     wanted_fields: fields,
-        //     description: description,
-        //     team_members: team_members,
-        //     appliers: appliers
-        // });
-        // projects.push(newProject);
-        // return newProject;
+        for (uint256 i = 0; i < projects.length; i++) {
+            if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(project_name))) {
+                revert("project is alread exist");
+            }
+        }
+
+        CloseDetail memory close_detail = CloseDetail(CloseReason.Ongoing, "project is open");
+
+        Project memory project;
+        project.project_name = project_name;
+        project.owner = msg.sender;
+        project.project_image = project_image;
+        project.project_detail_images = project_detail_images;
+        project.appliers[0] = msg.sender;
+        project.wanted_jobs = wanted_jobs;
+        project.description = description;
+        project.close_detail = close_detail;
+        project.fields = fields;
+
+        projects.push(project);
+
+        return projects[projects.length];
     }
 
     function create_account(
