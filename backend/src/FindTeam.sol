@@ -71,11 +71,13 @@ contract FindTeam {
         string description;
     }
 
-    mapping(address => Account) public accounts;
-
+    mapping(address => Account) public accountmap;
+    Account[] public accounts;
     Project[] public projects;
 
-    function list_projects(Field[] calldata fields, Job job) public view returns (ListProject[] memory) {}
+    function list_projects(Field[] calldata fields, Job job) public view returns (ListProject[] memory) {
+        
+    }
 
     //==========================================
     function list_finished_projects(Field[] calldata fields, Job job) public view {} //
@@ -91,7 +93,7 @@ contract FindTeam {
     }
 
     function show_account_info(address _account_id) public view returns (Account memory) {
-        return accounts[_account_id];
+        return accountmap[_account_id];
     }
 
     function create_project(
@@ -128,8 +130,8 @@ contract FindTeam {
         image_url,
         bio,
         links , 
-        "" ,
-        "" ,
+        new string[](0),
+        new string[](0),
         job
     );
 
@@ -166,12 +168,13 @@ contract FindTeam {
     projects[index].team_members.push(account_id);
 
     for (uint256 i = 0; i < projects[index].appliers.length; i++) {
-        if (projects[index].appliers[i] == account_id) {
-           projects[index].appliers[i] = projects[projects.length - 1];
-           projects.appliers[].pop();
-       }
-            break;
-        }
+    if (projects[index].appliers[i] == account_id) {
+        projects[index].team_members.push(account_id);
+        projects[index].appliers[i] = projects[index].appliers[projects[index].appliers.length - 1];
+        projects[index].appliers.pop();
+        break;
+    }
+}
     }
     
     function reject_application(string calldata _project_name, address account_id) public {
@@ -199,12 +202,13 @@ contract FindTeam {
     require(isApplier, "Account has not applied for this project");
 
     for (uint256 i = 0; i < projects[index].appliers.length; i++) {
-        if (projects[index].appliers[i] == account_id) {
-           projects[index].appliers[i] = projects[projects.length - 1];
-           projects.appliers[].pop();
-       }
-            break;
-        }
+    if (projects[index].appliers[i] == account_id) {
+        projects[index].team_members.push(account_id);
+        projects[index].appliers[i] = projects[index].appliers[projects[index].appliers.length - 1];
+        projects[index].appliers.pop();
+        break;
+    }
+}
     }
 
     //function addParticipant() public{}
@@ -225,7 +229,7 @@ contract FindTeam {
     ) public returns (Account memory) {}
 
     function closeProject(string calldata _project_name, string calldata description) public {
-        for(uint256 = i; i < projects.length; i++) {
+        for(uint256 i = 0; i < projects.length; i++) {
             if(keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
                 projects[i].close_detail = CloseDetail(true,description);
                 break;
