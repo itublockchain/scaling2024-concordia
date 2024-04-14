@@ -185,6 +185,7 @@ contract FindTeam {
             }
         }
 
+        require(accountmap[msg.sender].account_id != address(0),"You have to create account before creating a project!");
         CloseDetail memory close_detail = CloseDetail(CloseReason.Ongoing, "project is open");
 
         Project memory project;
@@ -211,7 +212,7 @@ contract FindTeam {
         string calldata bio,
         Job job
     ) public {
-        require(accountmap[msg.sender].account_id != address(0), "this user has created an account before");
+        require(accountmap[msg.sender].account_id == address(0), "this user has created an account before");
         Account storage newAccount = accountmap[msg.sender];
 
         newAccount.account_id = msg.sender;
@@ -236,14 +237,14 @@ contract FindTeam {
             }
         }
         for (uint256 i = 0; i < projects[index].appliers.length; i++) {
+            require(projects[index].owner != msg.sender, "Owner of the project cannot apply!");
             if (projects[index].appliers[i] == msg.sender) {
                 revert("You have already applied for this project!");
-            }else{
-                require(projects[i].owner != msg.sender, "Owner of the project cannot apply!");
-                projects[index].appliers.push(msg.sender);
             }
         }
+        projects[index].appliers.push(msg.sender);
     }
+
 
     function accept_application(string calldata _project_name, address account_id) public {
         require(accountmap[msg.sender].account_id == address(0), "applier does not created account");
