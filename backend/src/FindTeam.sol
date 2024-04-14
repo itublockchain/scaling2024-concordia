@@ -228,10 +228,19 @@ contract FindTeam {
     }
 
     function apply_for_project(string calldata project_name) public {
+        uint index;
         for (uint256 i = 0; i < projects.length; i++) {
             if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(project_name))) {
+                index = i;
+                break;
+            }
+        }
+        for (uint256 i = 0; i < projects[index].appliers.length; i++) {
+            if (projects[index].appliers[i] == msg.sender) {
+                revert("You have already applied for this project!");
+            }else{
                 require(projects[i].owner != msg.sender, "Owner of the project cannot apply!");
-                projects[i].appliers.push(msg.sender);
+                projects[index].appliers.push(msg.sender);
             }
         }
     }
@@ -335,6 +344,7 @@ contract FindTeam {
         string calldata bio,
         SocialLink[] calldata social_links
     ) public returns (Account memory) {
+        require(msg.sender==account_id,"You are not the owner of this account!");
         Account storage changeAccount = accountmap[account_id];
         changeAccount.nickname = nickname;
         changeAccount.profile_image = profile_image;
