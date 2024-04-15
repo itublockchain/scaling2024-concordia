@@ -202,10 +202,9 @@ contract FindTeam {
                 projects[index].team_members.push(account_id);
                 projects[index].appliers[i] = projects[index].appliers[projects[index].appliers.length - 1];
                 projects[index].appliers.pop();
+                accountmap[account_id].joined_project_ids.push(projects[index].project_name);
                 break;
             }
-
-            accountmap[msg.sender].joined_project_ids.push(projects[index].project_name);
         }
     }
 
