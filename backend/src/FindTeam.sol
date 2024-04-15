@@ -286,8 +286,8 @@ contract FindTeam {
     function closeProject(string calldata _project_name, CloseReason reason, string calldata description) public {
         for (uint256 i = 0; i < projects.length; i++) {
             if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(_project_name))) {
-                require(projects[i].owner != msg.sender, "You are not the owner");
-                require(projects[i].close_detail.reason == CloseReason.Interrupted, "Project already closed");
+                require(projects[i].owner == msg.sender, "You are not the owner");
+                require(projects[i].close_detail.reason == CloseReason.Ongoing, "Project already closed");
                 projects[i].close_detail = CloseDetail(reason, description);
                 break;
             }
