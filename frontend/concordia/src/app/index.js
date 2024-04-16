@@ -1,6 +1,7 @@
+'use client';
 import Head from "next/head";
 import Image from "next/image";
-import Footer from "../components/Footer";
+import Footer from "./Footer";
 import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import "react-pro-sidebar/dist/css/styles.css";

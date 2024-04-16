@@ -1,13 +1,13 @@
+'use client';
 import Link from "next/link";
 
 import { ConnectButton } from "web3uikit";
 import { ProSidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
-import NavigationDropdown from "./NavigationDropdown";
+
 import { useEffect, useState, useCallback } from "react";
 import { useMoralis, useWeb3Contract, useChain } from "react-moralis";
-import { abi } from "../constants";
-import { BigNumber, ethers } from "ethers";
+
 import { useRouter } from "next/router";
 import { FaBars, FaTimes } from "react-icons/fa";
 
@@ -45,8 +45,7 @@ const useMediaQuery = (width) => {
 export default function Header() {
   const [collapsed, setCollapsed] = useState(true);
   const isBreakpoint = useMediaQuery(912);
-  const { isWeb3Enabled, chainId: chainIdHex, enableWeb3 } = useMoralis();
-  const { switchNetwork, chain, account } = useChain();
+
   const [showDropdown, setShowDropdown] = useState(false); // State for dropdown visibility
   const [searchInput, setSearchInput] = useState("");
 
@@ -62,7 +61,7 @@ export default function Header() {
   };
 
   // console.log(chainIdHex)
-  const chainId = parseInt(chainIdHex);
+
 
   const router = useRouter();
   const currentUrl = router.asPath;
@@ -245,16 +244,8 @@ export default function Header() {
                 {" "}
                 <ConnectButton text="This is a button" />
               </div>
-              {chainId != "97" && isWeb3Enabled && (
-                <button
-                  className=" ml-4 text-red-700 text-sm my-2 cursor-pointer bg-red-100 rounded-lg p-1 px-2"
-                  onClick={() => {
-                    switchNetwork("0x61");
-                  }}
-                >
-                  Switch to BSC Testnet
-                </button>
-              )}
+
+              
             </div>
             {isBreakpoint && (
               <div
