@@ -1,33 +1,9 @@
-'use client';
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+"use client";
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-
-
-
-
-import { RotateLoader, ClipLoader } from "react-spinners";
-
-
-
 
 import "react-datepicker/dist/react-datepicker.css";
 
-import Layout from "./layout";
-
-
-
-
-const Launch = () => {
-
-
-  
-
-
-
-
-  
+export default function Launch() {
   return (
     <>
       <section className="bg-gradient-to-r from-sky-500 to-indigo-500">
@@ -40,9 +16,8 @@ const Launch = () => {
           <div className="md:w-5/12 ">
             <h1>Project Title</h1>
             <p className="md:text-sm text-xs text-gray-600">
-               <br />
               <br />
-            
+              <br />
             </p>
           </div>
           <div className="w-12/12 md:w-7/12 md:px-11 mt-5 md:mt-0">
@@ -50,9 +25,8 @@ const Launch = () => {
               <h1>Title</h1>
 
               <input
-             
                 type="text"
-                maxLength="80"
+                maxLength={80}
                 name="text"
                 id="title"
                 placeholder="Write a short Title"
@@ -64,11 +38,10 @@ const Launch = () => {
               <h1>Subtitle</h1>
 
               <input
-            
                 type="text"
                 name="text"
                 id="subtitle"
-                maxLength="100"
+                maxLength={100}
                 placeholder="A short subtitle is going to help"
                 className="md:w-96 w-full block p-2 md:text-sm text-xs mt-1 border border-gray-300 focus:outline-none rounded-md"
               />
@@ -79,16 +52,13 @@ const Launch = () => {
         <div className="flex md:flex-row flex-col border-t my-11 border-gray-300 py-4 md:px-16 px-5 ">
           <div className="md:w-5/12 ">
             <h1 className="">Project Description</h1>
-            <p className="md:text-sm text-xs text-gray-600">
-             Description
-            </p>
+            <p className="md:text-sm text-xs text-gray-600">Description</p>
           </div>
           <div className="md:w-7/12 md:px-11 mt-4 md:mt-0">
             <div>
               <h1>Note</h1>
               <textarea
-     
-                cols="50"
+                cols={50}
                 wrap="soft"
                 placeholder="Write a short note"
                 id="note"
@@ -110,18 +80,10 @@ const Launch = () => {
           <div className="md:w-7/12 md:px-11 ">
             <div className="">
               <div className="border border-gray-300 h-40 md:h-80 w-full hover:bg-gray-200">
-                <button
-                  className="w-full h-full"
-                  id="image"
-          
-                >
+                <button className="w-full h-full" id="image">
                   {true ? (
                     <div className="w-full h-full">
-                      <img
-                        alt="..."
-                    
-                        className="object-cover w-full h-full"
-                      />
+                      <img alt="..." className="object-cover w-full h-full" />
                     </div>
                   ) : (
                     <div>
@@ -135,9 +97,7 @@ const Launch = () => {
                 <input
                   type="file"
                   id="imageSrc"
-                
                   style={{ display: "none" }}
-             
                   className="w-80 block p-2 text-sm mt-1 border border-gray-300 focus:outline-none rounded-md"
                 />
               </div>
@@ -176,17 +136,6 @@ const Launch = () => {
                       </svg>
 
                       {/* <DatePicker /> */}
-
-                      <DatePicker
-                        id="launchDate"
-                        className=" text-gray-900 md:w-60 w-40 bg-gray-50 p-2 sm:text-sm outline-none "
-                 
-                    
-
-                       
-                          // setLaunchDate(date);
-                     
-                      />
                     </div>
                     {/* {!isValidLaunchDate && (
                       <p className="text-red-700 text-sm">
@@ -214,12 +163,9 @@ const Launch = () => {
           </div>
           <div className="md:w-7/12 md:px-11 ">
             <div>
-              <h1 className="md:text-auto text-sm">
-                Duration){" "}
-              </h1>
+              <h1 className="md:text-auto text-sm">Duration) </h1>
 
               <input
-              
                 type="text"
                 name="text"
                 id="duration"
@@ -252,50 +198,35 @@ const Launch = () => {
               <div className="flex border border-gray-300 rounded-md items-center p-2">
                 <p>$</p>
                 <input
-                  
                   type="text"
-                  value={true || ""}
                   name="text"
                   id="goal"
                   // placeholder="$50,000"
                   className="md:w-80 w-full block md:text-sm text-xs ml-1  focus:outline-none rounded-md"
                 />
               </div>
-
             </div>
           </div>
         </div>
 
         <button
           className="flex flex-col w-full items-center my-5 mb-14 disabled:cursor-not-allowed disabled:opacity-50"
-      
-        
+
           // disabled={false}
         >
           {true ? (
             <div className="flex bg-green-300 text-green-800 rounded-md items-center px-3 py-3">
-              <ClipLoader color="#004d00" loading="true" size={30} />
               <p className="ml-2"></p>
             </div>
           ) : (
             <div className="flex bg-green-300 text-green-800 rounded-md items-center px-3 py-3">
-              <p className="">{launchText}</p>
+              <p className="">{/* {launchText} */}</p>
             </div>
           )}
         </button>
       </section>
 
-      <div className="flex justify-center text-center sm:block sm:p-0 mt-2">
-
-      
-        
-      </div>
+      <div className="flex justify-center text-center sm:block sm:p-0 mt-2"></div>
     </>
   );
-};
-
-Launch.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
-};
-
-export default Launch;
+}

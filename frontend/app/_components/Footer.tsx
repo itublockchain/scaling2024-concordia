@@ -31,9 +31,7 @@ export default function Footer() {
           <a
             target="_blank"
             rel="noreferrer"
-            href={
-              "https://twitter.com/ITUblockchain"
-            }
+            href={"https://twitter.com/ITUblockchain"}
             className="object-cover ml-3 rounded-md "
           >
             <Image src="/twitter.svg" alt="twitter" width={28} height={28} />
