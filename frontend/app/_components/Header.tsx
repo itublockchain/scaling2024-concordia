@@ -151,9 +151,9 @@ export default function Header() {
                   Home
                 </Link>
                 <Link
-                  href="/projects"
+                  href="./projectpage"
                   className={`sm:ml-8 ml-6 text-white ${
-                    currentUrl == "/projects" && "border-b-2 border-orange-700"
+                    currentUrl == "./create_project/projectpage" && "border-b-2 border-orange-700"
                   } font-semibold hover:text-orange-500 text-lg`}
                 >
                   Projects
