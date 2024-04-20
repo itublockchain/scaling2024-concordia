@@ -1,6 +1,10 @@
 "use client";
+<<<<<<< HEAD
 import { useProjects } from "../contexts/ProjectsContext";
 import React, { useEffect, useState } from "react";
+=======
+import React, { useCallback, useEffect, useState } from "react";
+>>>>>>> dd785120 (commit)
 import { SingleImageUpload } from "../_components/SingleImageUpload";
 import {
   MemoMultipleImageUpload,
@@ -250,11 +254,11 @@ export default function CreateProject() {
                   <FormLabel>Project Detail Images Upload</FormLabel>
                   <FormControl>
                     <MemoMultipleImageUpload
-                      returnImages={(data) => {
+                      returnImages={useCallback((data) => {
                         form.setValue("projectDetailImages", data);
                         console.log(data);
                         form.clearErrors("projectDetailImages");
-                      }}
+                      }, [])}
                     />
                   </FormControl>
                   <FormMessage />

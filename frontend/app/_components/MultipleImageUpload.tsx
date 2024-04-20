@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 
 import { Card, CardContent } from "@/app/_components/ui/card";
@@ -24,6 +25,7 @@ interface MultipleImageUploadComponentProps {
 }
 
 export function MultipleImageUpload(props: MultipleImageUploadComponentProps) {
+  console.log("rendered");
   // let [cardCount, setCardCount] = useState<number>(1);
   let [images, setImage] = useState<Array<string>>([""]);
 
@@ -35,6 +37,7 @@ export function MultipleImageUpload(props: MultipleImageUploadComponentProps) {
       data.push("");
       return data;
     });
+    console.log("asd", images);
     props.returnImages(images);
   }
 
