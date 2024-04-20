@@ -1,4 +1,10 @@
-import { AbstractProvider, Contract, JsonRpcSigner, ethers } from "ethers";
+import {
+  AbstractProvider,
+  Contract,
+  JsonRpcSigner,
+  ethers,
+  isError,
+} from "ethers";
 const provider = new ethers.JsonRpcProvider("https://rpc2.sepolia.org");
 
 // The provider also allows signing transactions to
@@ -6,7 +12,40 @@ const provider = new ethers.JsonRpcProvider("https://rpc2.sepolia.org");
 // For this, we need the account signer...
 export const ConcordiaAbi = [
   "function show_project_info(string calldata _project_name) view",
+  "function create_project(string calldata project_name, string calldata project_image, string[] calldata project_detail_images, tuple(bool reseacher ,bool designer ,bool developer, bool investor) calldata wanted_jobs, string calldata description, uint8[] calldata fields)",
+  "function create_account(string calldata nickname,string calldata image_url,tuple(string name,string url)[] calldata links,string calldata bio,uint8 job)",
 ];
+
+export interface CreateProjectInterface {
+  project_name: string;
+  project_image: string;
+  project_detail_images: string[];
+  wanted_jobs: Want;
+  description: string;
+  fields: number[];
+}
+
+export interface Want {
+  reseacher: boolean;
+  designer: boolean;
+  developer: boolean;
+  investor: boolean;
+}
+
+//string calldata nickname,string calldata image_url,SocialLink[] calldata links,string calldata bio,Job job
+
+export interface CreateAccountInterface {
+  nickname: string;
+  image_url: string;
+  links: SocialLink[];
+  bio: string;
+  job: number;
+}
+
+export interface SocialLink {
+  name: string;
+  url: string;
+}
 
 export const ConcordiaAbi1 = [
   "function closeProject(string calldata _project_name, CloseReason reason, string calldata description)",
@@ -16,11 +55,11 @@ export const ConcordiaAbi1 = [
   "function accept_application(string calldata _project_name, address account_id)",
   "function apply_for_project(string calldata project_name)",
   "function create_account(string calldata nickname,string calldata image_url,SocialLink[] calldata links,string calldata bio,Job job)",
-  "function create_project(string calldata project_name,string calldata project_image,string[] calldata project_detail_images, Want calldata wanted_jobs, string calldata description, Field[] calldata fields) returns (Project memory)",
+  "function create_project(string calldata project_name,string calldata project_image,string[] calldata project_detail_images, Want calldata wanted_jobs, string calldata description, Field[] calldata fields)",
   "function show_project_info(string calldata _project_name) view returns (Project memory)",
 ];
 const concordiaContract = new Contract(
-  "0x27E98E87C9f8CB05EbaC1f2E92c666d102A73aba",
+  "0xff5c3eA3a3C0e2E4b8a115EdC23CfE7855213C82",
   ConcordiaAbi,
   provider,
 );
@@ -54,16 +93,55 @@ async function get_projects() {
   }
 }
 
-async function create_project(signer: JsonRpcSigner) {
+export async function create_project(
+  signer: JsonRpcSigner,
+  projectData: CreateProjectInterface,
+) {
   try {
-    let result = await concordiaContract.show_account_info(account_id);
-    return result;
-  } catch (err) {
-    return "";
+    console.log(JSON.stringify(projectData));
+    const concordiaContract = new Contract(
+      "0x27E98E87C9f8CB05EbaC1f2E92c666d102A73aba",
+      ConcordiaAbi,
+      signer,
+    );
+    let tx = await concordiaContract.create_project(
+      projectData.project_name,
+      projectData.project_image,
+      projectData.project_detail_images,
+      projectData.wanted_jobs,
+      projectData.description,
+      projectData.fields,
+    );
+    return await tx.wait();
+  } catch (e) {
+    return e;
   }
 }
 
-async function create_account(signer: JsonRpcSigner) {}
+export async function create_account(
+  signer: JsonRpcSigner,
+  accountData: CreateAccountInterface,
+) {
+  try {
+    const concordiaContract = new Contract(
+      "0x27E98E87C9f8CB05EbaC1f2E92c666d102A73aba",
+      ConcordiaAbi,
+      signer,
+    );
+    //string calldata nickname,string calldata image_url,SocialLink[] calldata links,string calldata bio,Job job
+    let tx = await concordiaContract.create_account(
+      accountData.nickname,
+      accountData.image_url,
+      accountData.links,
+      accountData.bio,
+      accountData.job,
+    );
+    console.log(tx);
+    return await tx.wait();
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 async function apply_for_project(signer: JsonRpcSigner) {}
 

@@ -1,4 +1,13 @@
 "use client";
+// Replace this with any of the networks listed at https://viem.sh/docs/clients/chains.html
+import {
+  base,
+  baseGoerli,
+  mainnet,
+  sepolia,
+  polygon,
+  polygonMumbai,
+} from "viem/chains";
 
 import { PrivyProvider } from "@privy-io/react-auth";
 
@@ -12,8 +21,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           accentColor: "#676FFF",
           logo: "https://your-logo-url",
         },
+        defaultChain: sepolia,
+        supportedChains: [sepolia],
         embeddedWallets: {
-          createOnLogin: "users-without-wallets",
+          createOnLogin: "off",
         },
       }}
     >

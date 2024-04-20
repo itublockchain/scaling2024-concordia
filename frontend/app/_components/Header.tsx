@@ -1,10 +1,9 @@
 "use client";
 import Link from "next/link";
 
-import { Sidebar, Menu, MenuItem } from "react-pro-sidebar";
-
 import { useEffect, useState, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { LoginButton } from "./privy_login_button";
 
 const useMediaQuery = (width) => {
   const [targetReached, setTargetReached] = useState(false);
@@ -55,64 +54,12 @@ export default function Header() {
 
   const currentUrl = usePathname();
 
-  useEffect(() => {
-    console.log(collapsed);
-  }, [collapsed]);
-  const handleSidebar = () => {
-    setCollapsed((prevCollapsed) => !prevCollapsed);
-  };
-
   return (
     <div className="bg-gradient-to-r from-sky-500 to-indigo-500">
       {/* Navbar */}
 
       {!collapsed && isBreakpoint && (
-        <div className={`z-50 h-screen ${!collapsed && "fixed inset-0"}`}>
-          <Sidebar toggled={false} collapsedWidth="0px" collapsed={collapsed}>
-            <div
-              className="px-4 pt-4 w-full flex justify-end text-end cursor-pointer text-xl "
-              onClick={handleSidebar}
-            ></div>
-            <Menu>
-              <div className="text-xl text-white hover:text-green-700">
-                <MenuItem>
-                  <Link href="/">
-                    <p
-                      className={`text-white font-semibold ${
-                        currentUrl == "/" && "border-b-2 border-orange-700"
-                      } hover:text-orange-500 sm:text-xl text-lg`}
-                    >
-                      Home
-                    </p>
-                  </Link>
-                </MenuItem>
-              </div>
-              <MenuItem>
-                <Link href="/projects">
-                  <p
-                    className={`text-white ${
-                      currentUrl == "/projects" &&
-                      "border-b-2 border-orange-700"
-                    } font-semibold hover:text-orange-500 text-lg`}
-                  >
-                    Projects
-                  </p>
-                </Link>
-              </MenuItem>
-              <MenuItem>
-                <Link href="/launch">
-                  <p
-                    className={`w-full text-white ${
-                      currentUrl == "/launch" && "border-b-2 border-orange-700"
-                    } font-semibold hover:text-orange-500 text-lg `}
-                  >
-                    Get Funded
-                  </p>
-                </Link>
-              </MenuItem>
-            </Menu>
-          </Sidebar>
-        </div>
+        <div className={`z-50 h-screen ${!collapsed && "fixed inset-0"}`}></div>
       )}
 
       <nav className="flex  items-end flex-row w-full justify-between hh:justify-between hh:items-center px-2 py-2 sm:px-4 sm:py-4 h-full text-white bg-zinc-800 bg-gradient-to-r from-sky-500 to-indigo-500 ">
@@ -218,7 +165,7 @@ export default function Header() {
                 </Link>
 
                 <Link
-                  href="/launch"
+                  href="/create_project"
                   className={`sm:mx-4 mx-2 w-full text-white ${
                     currentUrl == "/launch" && "border-b-2 border-orange-700"
                   } font-semibold hover:text-orange-500 `}
@@ -230,13 +177,12 @@ export default function Header() {
 
             <div className="text-white flex flex-col w-full sc:py-10 items-start">
               {/* <Button type="button" text="Connect Wallet" /> */}
-              <div className="px-0"> ConnectButton</div>
+              <div className="px-0">
+                <LoginButton />
+              </div>
             </div>
             {isBreakpoint && (
-              <div
-                className="w-8 h-8 text-white hover:text-green-500 cursor-pointer"
-                onClick={handleSidebar}
-              >
+              <div className="w-8 h-8 text-white hover:text-green-500 cursor-pointer">
                 {/* <img
                   alt="..."
                   src="./menubar.svg"
