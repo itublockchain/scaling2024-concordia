@@ -1,10 +1,5 @@
 "use client";
-<<<<<<< HEAD
-import { useProjects } from "../contexts/ProjectsContext";
-import React, { useEffect, useState } from "react";
-=======
 import React, { useCallback, useEffect, useState } from "react";
->>>>>>> dd785120 (commit)
 import { SingleImageUpload } from "../_components/SingleImageUpload";
 import {
   MemoMultipleImageUpload,
@@ -106,8 +101,6 @@ const FormSchema = z.object({
 
 export default function CreateProject() {
   const { wallets } = useWallets();
-  const { addProject } = useProjects();  // use the context
-  
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -141,17 +134,16 @@ export default function CreateProject() {
       fields: data.fields,
     });
 
-    if (!result?.reason) {
-      addProject({
-          projectName: data.projectName,
-          description: data.description,
-          projectImage: data.projectImage,
-          projectDetailImages: data.projectDetailImages,
+    if (result?.reason) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: result.reason,
       });
-      form.reset();
+      return;
+    }
+    form.reset();
   }
-}
-
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log("submitted", data);
