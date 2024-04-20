@@ -12,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../_components/ui/select";
+import { create_account } from "@/utils/binding";
+import { ethers } from "ethers";
 
 type SignUpData = {
   nickname: string;
@@ -91,12 +93,25 @@ export default function SignUpPage() {
     setSignUpData({ ...signUpData, job: position });
   };
 
-  const isJobSelected = (job: string) => signUpData.job.includes(job);
+  async function createAccount() {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    // It will prompt user for account connections if it isnt connected
+    const signer = await provider.getSigner();
+
+    const result = await create_account(signer, {
+      nickname: signUpData.nickname,
+      image_url: signUpData.profileImage,
+      links: [],
+      bio: signUpData.bio,
+      job: signUpData.job,
+    });
+    console.log("asd");
+    console.log(result);
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Sign Up Data Submitted: ", signUpData);
-    // backend buraya
+    (async () => await createAccount())();
   };
 
   return (
@@ -108,7 +123,7 @@ export default function SignUpPage() {
           </h2>
           <p className="mt-2 text-sm text-gray-600">On Concordia</p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <div className="mt-8 space-y-6">
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -126,7 +141,11 @@ export default function SignUpPage() {
               />
             </div>
             <div>
-              <SingleImageUpload />
+              <SingleImageUpload
+                returnImage={(data) => {
+                  setSignUpData({ ...signUpData, profileImage: data });
+                }}
+              />
             </div>
             {["telegram", "twitter", "discord"].map((platform, idx) => (
               <div key={platform}>
@@ -159,7 +178,7 @@ export default function SignUpPage() {
             />
           </div>
           <div className="relative">
-            <Select>
+            <Select onValueChange={handleCheckboxChange}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a Job" />
               </SelectTrigger>
@@ -174,12 +193,12 @@ export default function SignUpPage() {
             </Select>
           </div>
           <button
-            type="submit"
+            onClick={handleSubmit}
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Sign Up
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

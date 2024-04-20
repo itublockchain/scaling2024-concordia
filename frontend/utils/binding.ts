@@ -141,6 +141,7 @@ export async function create_account(
       ConcordiaAbi,
       signer,
     );
+    console.log(accountData);
     let tx = await concordiaContract.create_account(
       accountData.nickname,
       accountData.image_url,
@@ -148,10 +149,12 @@ export async function create_account(
       accountData.bio,
       accountData.job,
     );
-    console.log(tx);
+    console.log("asdsw");
+
     return await tx.wait();
   } catch (err) {
-    console.log(err);
+    console.log("err");
+    return err;
   }
 }
 
