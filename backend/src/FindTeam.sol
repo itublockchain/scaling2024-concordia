@@ -19,7 +19,8 @@ contract FindTeam {
         Reseacher,
         Designer,
         Developer,
-        Investor
+        Investor,
+        None
     }
 
     enum Field {
@@ -82,6 +83,83 @@ contract FindTeam {
     mapping(address => Account) public accountmap;
     Project[] public projects;
 
+    function list_projects(Field[] calldata fields, Job job) public view returns (ListProject[] memory) {
+        uint256 max_iteration = 10;
+        ListProject[] memory temp_projects = new ListProject[](max_iteration);
+        bool field_search = fields.length != 0;
+        bool job_search = FindTeam.Job.None != job;
+        bool field_match = false;
+        bool job_match = false;
+        uint256 push_index = 0;
+
+        for (uint256 p_index = 0; p_index < projects.length; p_index++) {
+            field_match = false;
+            job_match = false;
+            if (field_search) {
+                for (uint256 p_field_index = 0; p_field_index < projects[p_index].fields.length; p_field_index++) {
+                    for (uint256 field_index = 0; field_index < fields.length; field_index++) {
+                        if (projects[p_index].fields[p_field_index] == fields[field_index]) {
+                            field_match = true;
+                            break;
+                        }
+                        field_match = false;
+                    }
+                    if (field_match) {
+                        break;
+                    }
+                }
+            }
+
+            if (job_search) {
+                if (projects[p_index].wanted_jobs.reseacher && job == FindTeam.Job.Reseacher) {
+                    job_match = true;
+                }
+                if (projects[p_index].wanted_jobs.designer && job == FindTeam.Job.Designer) {
+                    job_match = true;
+                }
+                if (projects[p_index].wanted_jobs.developer && job == FindTeam.Job.Developer) {
+                    job_match = true;
+                }
+                if (projects[p_index].wanted_jobs.investor && job == FindTeam.Job.Investor) {
+                    job_match = true;
+                }
+            }
+
+            bool condition = false;
+
+            if (!field_search && !job_search) condition = true;
+
+            if (field_search && job_search) {
+                condition = field_match && job_match;
+            }
+
+            if (field_search && !job_search) {
+                condition = field_search;
+            }
+
+            if (!field_search && job_search) {
+                condition = job_search;
+            }
+
+            if (condition) {
+                Project memory project = projects[p_index];
+                ListProject memory temp_project = ListProject(
+                    project.project_name,
+                    project.wanted_jobs,
+                    project.fields,
+                    project.project_image,
+                    project.description
+                );
+
+                temp_projects[push_index] = temp_project;
+                push_index = push_index + 1;
+                if (push_index == max_iteration) {
+                    break;
+                }
+            }
+        }
+        return temp_projects;
+    }
 
     function show_project_info(string calldata _project_name) public view returns (Project memory) {
         for (uint256 i = 0; i < projects.length; i++) {
@@ -110,7 +188,9 @@ contract FindTeam {
             }
         }
 
-        require(accountmap[msg.sender].account_id != address(0),"You have to create account before creating a project!");
+        require(
+            accountmap[msg.sender].account_id != address(0), "You have to create account before creating a project!"
+        );
         CloseDetail memory close_detail = CloseDetail(CloseReason.Ongoing, "project is open");
 
         Project memory project;
@@ -156,7 +236,7 @@ contract FindTeam {
     }
 
     function apply_for_project(string calldata project_name) public {
-        uint index;
+        uint256 index;
         for (uint256 i = 0; i < projects.length; i++) {
             if (keccak256(bytes(projects[i].project_name)) == keccak256(bytes(project_name))) {
                 index = i;
@@ -171,7 +251,6 @@ contract FindTeam {
         }
         projects[index].appliers.push(msg.sender);
     }
-
 
     function accept_application(string calldata _project_name, address account_id) public {
         require(accountmap[msg.sender].account_id != address(0), "applier does not created account");
@@ -270,7 +349,7 @@ contract FindTeam {
         string calldata bio,
         SocialLink[] calldata social_links
     ) public returns (Account memory) {
-        require(msg.sender==account_id,"You are not the owner of this account!");
+        require(msg.sender == account_id, "You are not the owner of this account!");
         Account storage changeAccount = accountmap[account_id];
         changeAccount.nickname = nickname;
         changeAccount.profile_image = profile_image;
