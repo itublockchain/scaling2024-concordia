@@ -84,58 +84,72 @@ export default function AccordionDemo() {
   console.log(projects);
   return (
     <>
-      <Accordion type="single" collapsible className="w-full">
-        {projects.map((data, index) => (
-          <AccordionItem value={`${index}`} key={index}>
-            <AccordionTrigger>
-              <div className="flex justify-around">
-                <div className="flex">
-                  <img
-                    src={data[3]}
-                    width={400}
-                    height={400}
-                    alt="Picture of the author"
-                  />
+      <div>filter</div>
+      <div className="w-8/12 mx-auto">
+        <Accordion type="single" collapsible className="w-full">
+          {projects.map((data, index) => (
+            <AccordionItem value={`${index}`} key={index}>
+              <AccordionTrigger>
+                <div className="flex justify-between w-full">
+                  <div className="flex basis-1/4">
+                    <img
+                      src={data[3]}
+                      width={400}
+                      height={400}
+                      alt="Picture of the author"
+                    />
+                  </div>
+                  <div className="flex flex-col basis-1/4 gap-14 mt-6">
+                    <div className="">{data[0]}</div>
+                    <span className="font-semibold line-clamp-4">
+                      {data[4]}
+                    </span>
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <Button>apply the project</Button>
+                  </div>
                 </div>
-                <div className="flex"></div>
-              </div>
-              {data[4]}
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="w-8/12 flex flex-col items-center">
-                Fields
-                <div className="flex gap-10 justify-start items-start">
-                  {data[2].map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-row items-start space-x-3 space-y-0"
-                    >
-                      <Checkbox checked={item == 1} />
-                      <label className="text-sm font-normal">
-                        {fields.find((data) => data.id == item).label}
-                      </label>
-                    </div>
-                  ))}
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col mx-auto">
+                  Fields
+                  <div className="flex gap-10 justify-start items-start">
+                    {fields.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <Checkbox
+                          checked={
+                            data[2].find((i: number) => i == index) == index
+                          }
+                        />
+                        <label className="text-sm font-normal">
+                          {item.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  Jobs
+                  <div className="flex gap-10 justify-start items-start">
+                    {data[1].map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <Checkbox checked={item} />
+                        <label className="text-sm font-normal">
+                          {jobs[index].label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                Jobs
-                <div className="flex gap-10 justify-start items-start">
-                  {data[1].map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex flex-row items-start space-x-3 space-y-0"
-                    >
-                      <Checkbox checked={item} />
-                      <label className="text-sm font-normal">
-                        {jobs[index].label}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </>
   );
 }
