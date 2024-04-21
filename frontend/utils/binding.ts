@@ -5,7 +5,9 @@ import {
   ethers,
   isError,
 } from "ethers";
-const provider = new ethers.JsonRpcProvider("https://rpc2.sepolia.org");
+const provider = new ethers.JsonRpcProvider(
+  "https://sepolia-rollup.arbitrum.io/rpc",
+);
 
 // The provider also allows signing transactions to
 // send ether and pay to change state within the blockchain.

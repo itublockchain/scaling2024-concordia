@@ -36,6 +36,7 @@ import { Textarea } from "../_components/ui/textarea";
 import { Checkbox } from "@/app/_components/ui/checkbox";
 import { create_account, create_project } from "@/utils/binding";
 import { LoadingContext } from "../_Providers";
+import { redirect, useRouter } from "next/navigation";
 
 const fields = [
   {
@@ -101,6 +102,7 @@ const FormSchema = z.object({
 
 export default function CreateProject() {
   let context = useContext(LoadingContext);
+  const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -143,6 +145,7 @@ export default function CreateProject() {
       return;
     }
     form.reset();
+    router.push(`/project/${data.projectName}`);
   }
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
