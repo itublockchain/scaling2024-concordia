@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SingleImageUpload } from "../_components/SingleImageUpload";
 import {
   MemoMultipleImageUpload,
@@ -34,8 +34,8 @@ import { Label } from "../_components/ui/label";
 import { Textarea } from "../_components/ui/textarea";
 
 import { Checkbox } from "@/app/_components/ui/checkbox";
-import { useWallets } from "@privy-io/react-auth";
 import { create_account, create_project } from "@/utils/binding";
+import { LoadingContext } from "../_Providers";
 
 const fields = [
   {
@@ -100,7 +100,7 @@ const FormSchema = z.object({
 });
 
 export default function CreateProject() {
-  const { wallets } = useWallets();
+  let context = useContext(LoadingContext);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -114,11 +114,9 @@ export default function CreateProject() {
   });
 
   async function submit(data: z.infer<typeof FormSchema>) {
+    context.setLoading(true);
     const provider = new ethers.BrowserProvider(window.ethereum);
-    // It will prompt user for account connections if it isnt connected
     const signer = await provider.getSigner();
-    console.log("asd");
-    //0x26c063b43d2d46cac149dee9bbcad9e768fdef9b;
 
     const result = await create_project(signer, {
       project_name: data.projectName,
@@ -133,6 +131,8 @@ export default function CreateProject() {
       description: data.description,
       fields: data.fields,
     });
+
+    context.setLoading(false);
 
     if (result?.reason) {
       toast({

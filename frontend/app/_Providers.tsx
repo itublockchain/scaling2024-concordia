@@ -10,6 +10,9 @@ import {
 } from "viem/chains";
 
 import { PrivyProvider } from "@privy-io/react-auth";
+import { createContext } from "react";
+
+export const LoadingContext = createContext(null);
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (

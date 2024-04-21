@@ -1,7 +1,7 @@
 "use client";
 
 // pages/signup.tsx
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SingleImageUpload } from "../_components/SingleImageUpload";
 import {
   Select,
@@ -14,6 +14,8 @@ import {
 } from "../_components/ui/select";
 import { create_account } from "@/utils/binding";
 import { ethers } from "ethers";
+import { toast } from "../_components/ui/use-toast";
+import { LoadingContext } from "../_Providers";
 
 type SignUpData = {
   nickname: string;
@@ -66,6 +68,7 @@ const jobs = [
 ] as const;
 
 export default function SignUpPage() {
+  let context = useContext(LoadingContext);
   const [signUpData, setSignUpData] = useState<SignUpData>(null);
   const [showJobsDropdown, setShowJobsDropdown] = useState(false);
 
@@ -94,6 +97,7 @@ export default function SignUpPage() {
   };
 
   async function createAccount() {
+    context.setLoading(true);
     const provider = new ethers.BrowserProvider(window.ethereum);
     // It will prompt user for account connections if it isnt connected
     const signer = await provider.getSigner();
@@ -105,8 +109,17 @@ export default function SignUpPage() {
       bio: signUpData.bio,
       job: signUpData.job,
     });
-    console.log("asd");
-    console.log(result);
+
+    context.setLoading(false);
+
+    if (result?.reason) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: result.reason,
+      });
+      return;
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -178,7 +191,9 @@ export default function SignUpPage() {
             />
           </div>
           <div className="relative">
-            <Select onValueChange={handleCheckboxChange}>
+            <Select
+              onValueChange={(data) => handleCheckboxChange(parseInt(data))}
+            >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a Job" />
               </SelectTrigger>
@@ -186,7 +201,9 @@ export default function SignUpPage() {
                 <SelectGroup>
                   <SelectLabel>Fruits</SelectLabel>
                   {jobs.map((data, index) => (
-                    <SelectItem value={`${data.id}`}>{data.label}</SelectItem>
+                    <SelectItem key={index} value={`${data.id}`}>
+                      {data.label}
+                    </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>

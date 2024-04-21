@@ -17,8 +17,9 @@ import {
   ProjectDetailDisplayCard,
   ProjectDetailDisplayCardProps,
 } from "../_components/ProjectDetailDisplayCard";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Checkbox } from "../_components/ui/checkbox";
+import { LoadingContext } from "../_Providers";
 
 const fields = [
   {
@@ -59,12 +60,15 @@ const jobs = [
 ] as const;
 
 export default function AccordionDemo() {
+  let context = useContext(LoadingContext);
+
   useEffect(() => {
     get_projects([], 4);
   }, []);
   let [projects, setProjects] = useState([]);
 
   async function get_projects(fields: number[], job: number) {
+    context.setLoading(true);
     let rawData = await list_projects(fields, job);
     let parsedData = [];
     rawData.forEach((item: any) => {
@@ -78,6 +82,7 @@ export default function AccordionDemo() {
         parsedData.push(item);
       }
     });
+    context.setLoading(false);
     setProjects(parsedData);
   }
 
