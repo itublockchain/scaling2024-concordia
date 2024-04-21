@@ -141,7 +141,6 @@ export async function create_account(
       ConcordiaAbi,
       signer,
     );
-    console.log(accountData);
     let tx = await concordiaContract.create_account(
       accountData.nickname,
       accountData.image_url,
@@ -149,11 +148,8 @@ export async function create_account(
       accountData.bio,
       accountData.job,
     );
-    console.log("asdsw");
-
     return await tx.wait();
   } catch (err) {
-    console.log("err");
     return err;
   }
 }
@@ -209,6 +205,44 @@ export async function editAccount(signer: JsonRpcSigner) {}
 
 export async function editProject(signer: JsonRpcSigner) {}
 
-export async function reject_application(signer: JsonRpcSigner) {}
+export async function reject_application(
+  signer: JsonRpcSigner,
+  project_name: string,
+  account_id: string,
+) {
+  try {
+    const concordiaContract = new Contract(
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+      ConcordiaAbi,
+      signer,
+    );
+    let tx = await concordiaContract.reject_application(
+      project_name,
+      account_id,
+    );
+    return await tx.wait();
+  } catch (err) {
+    return err;
+  }
+}
 
-export async function accept_application(signer: JsonRpcSigner) {}
+export async function accept_application(
+  signer: JsonRpcSigner,
+  project_name: string,
+  account_id: string,
+) {
+  try {
+    const concordiaContract = new Contract(
+      process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+      ConcordiaAbi,
+      signer,
+    );
+    let tx = await concordiaContract.accept_application(
+      project_name,
+      account_id,
+    );
+    return await tx.wait();
+  } catch (err) {
+    return err;
+  }
+}
