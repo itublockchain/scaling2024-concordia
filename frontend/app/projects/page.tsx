@@ -25,6 +25,15 @@ import { ethers } from "ethers";
 import { toast } from "../_components/ui/use-toast";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../_components/ui/select";
 
 const fields = [
   {
@@ -66,6 +75,10 @@ const jobs = [
 
 export default function AccordionDemo() {
   let context = useContext(LoadingContext);
+  let [job, setJob] = useState("4");
+
+  let [field, setField] = useState([]);
+
   async function applyProject(project_name: string) {
     context.setLoading(true);
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -89,20 +102,16 @@ export default function AccordionDemo() {
   let [projects, setProjects] = useState([]);
 
   async function get_projects(fields: number[], job: number) {
+    console.log("asd", fields);
+    console.log("job", job);
     context.setLoading(true);
-    let rawData = await list_projects(fields, job);
+    let rawData = await list_projects([], job);
     if (rawData?.reason) {
       notFound();
     }
     let parsedData = [];
     rawData.forEach((item: any) => {
       if (item[0] != "") {
-        console.log(
-          item[2].map((val, index) => {
-            console.log(val == 1);
-            // if (val == 1) item[2][index] = true;
-          }),
-        );
         parsedData.push(item);
       }
     });
@@ -110,11 +119,118 @@ export default function AccordionDemo() {
     setProjects(parsedData);
   }
 
-  console.log(projects);
   return (
     <>
       <div className="text-center text-3xl font-semibold my-8 text-gray-800">
         Projects Filter
+        <div className="flex gap-10 justify-center mt-8">
+          <Select onValueChange={(value) => setJob(value)}>
+            <SelectTrigger className="w-[300px]">
+              <SelectValue placeholder="Select a Jobs" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Jobs</SelectLabel>
+                <SelectItem value="0">Reseacher</SelectItem>
+                <SelectItem value="1">Designer</SelectItem>
+                <SelectItem value="2">Developer</SelectItem>
+                <SelectItem value="3">Investor</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <div className="flex justify-around gap-6 items-center">
+            <div className="flex">
+              <Checkbox
+                id="0"
+                onCheckedChange={(state) => {
+                  if (state) {
+                    let prev = field;
+                    prev.push(0);
+                    setField(prev);
+                  } else {
+                    let prev = field;
+                    setField(prev.filter((val) => val != 0));
+                  }
+                }}
+              />
+              <label
+                htmlFor="0"
+                className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Defi
+              </label>
+            </div>
+            <div className="flex">
+              <Checkbox
+                id="1"
+                onCheckedChange={(state) => {
+                  if (state) {
+                    let prev = field;
+                    prev.push(1);
+                    setField(prev);
+                  } else {
+                    let prev = field;
+                    setField(prev.filter((val) => val != 1));
+                  }
+                }}
+              />
+              <label
+                htmlFor="1"
+                className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Wallet
+              </label>
+            </div>
+            <div className="flex">
+              <Checkbox
+                id="2"
+                onCheckedChange={(state) => {
+                  if (state) {
+                    let prev = field;
+                    prev.push(2);
+                    setField(prev);
+                  } else {
+                    let prev = field;
+                    setField(prev.filter((val) => val != 2));
+                  }
+                }}
+              />
+              <label
+                htmlFor="2"
+                className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Dao
+              </label>
+            </div>
+            <div className="flex">
+              <Checkbox
+                id="3"
+                onCheckedChange={(state) => {
+                  if (state) {
+                    let prev = field;
+                    prev.push(3);
+                    setField(prev);
+                  } else {
+                    let prev = field;
+                    setField(prev.filter((val) => val != 3));
+                  }
+                }}
+              />
+              <label
+                htmlFor="3"
+                className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                DApp
+              </label>
+            </div>
+          </div>
+        </div>
+        <Button
+          className="mt-4 w-[200px]"
+          onClick={() => get_projects(field, parseInt(job) || 4)}
+        >
+          Search
+        </Button>
       </div>
       <div className="w-11/12 mx-auto">
         <Accordion type="single" collapsible className="w-full">
