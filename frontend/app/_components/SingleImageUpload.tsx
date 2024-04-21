@@ -13,7 +13,7 @@ export function SingleImageUpload(props: ImageUploadComponentProps) {
 
   const preview = useRef<HTMLImageElement>(null);
 
-  const input = useRef<Element>();
+  const input = useRef<Element>(null);
 
   const textzone = useRef<Element>();
 

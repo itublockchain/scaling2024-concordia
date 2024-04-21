@@ -117,6 +117,7 @@ export default function CreateProject() {
 
   async function submit(data: z.infer<typeof FormSchema>) {
     context.setLoading(true);
+
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
 
@@ -161,6 +162,11 @@ export default function CreateProject() {
       ),
     });
   }
+  let callback = useCallback((data) => {
+    form.setValue("projectDetailImages", data);
+    console.log(data);
+    form.clearErrors("projectDetailImages");
+  }, []);
 
   return (
     <>
@@ -248,13 +254,7 @@ export default function CreateProject() {
                 <FormItem>
                   <FormLabel>Project Detail Images Upload</FormLabel>
                   <FormControl>
-                    <MemoMultipleImageUpload
-                      returnImages={useCallback((data) => {
-                        form.setValue("projectDetailImages", data);
-                        console.log(data);
-                        form.clearErrors("projectDetailImages");
-                      }, [])}
-                    />
+                    <MemoMultipleImageUpload returnImages={callback} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

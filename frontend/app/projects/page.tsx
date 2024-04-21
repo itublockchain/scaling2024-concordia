@@ -24,6 +24,7 @@ import { LoadingContext } from "../_Providers";
 import { ethers } from "ethers";
 import { toast } from "../_components/ui/use-toast";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 const fields = [
   {
@@ -90,6 +91,9 @@ export default function AccordionDemo() {
   async function get_projects(fields: number[], job: number) {
     context.setLoading(true);
     let rawData = await list_projects(fields, job);
+    if (rawData?.reason) {
+      notFound();
+    }
     let parsedData = [];
     rawData.forEach((item: any) => {
       if (item[0] != "") {
