@@ -9,6 +9,7 @@ import { ethers } from "ethers";
 import { useContext, useEffect, useState } from "react";
 import { LoadingContext } from "../_Providers";
 import { toast } from "./ui/use-toast";
+import Link from "next/link";
 
 const jobs = [
   {
@@ -89,7 +90,12 @@ export function ProjectApplications(props: {
               className="w-12 h-12 rounded-full mr-4"
             />
             <div>
-              <h3 className="text-lg font-semibold">{request[1]}</h3>
+              <Link
+                href={`/account/${request[0]}`}
+                className="text-lg font-semibold hover:text-red-600"
+              >
+                {request[1]}
+              </Link>
               <p className="text-sm text-gray-600">
                 Job:
                 {jobs.find((val) => val.id == request[7]).label}

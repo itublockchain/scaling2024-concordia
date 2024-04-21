@@ -1,4 +1,5 @@
 import { show_account_info, show_project_info } from "@/utils/binding";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 const jobs = [
@@ -48,13 +49,13 @@ export default async function Profil({ params }: { params: { slug: string } }) {
     name: rawAccountData[1],
     imageUrl: rawAccountData[2],
     bio: rawAccountData[3],
-    created_project_ids: rawAccountData[4],
-    joined_projects_ids: rawAccountData[5],
+    created_project_ids: rawAccountData[4] || [],
+    joined_projects_ids: rawAccountData[5] || [],
     job: rawAccountData[7],
   };
 
   let projects: Project[] = [];
-  for (const project of accountData.joined_projects_ids) {
+  for (const project of accountData?.joined_projects_ids) {
     let rawProjectData = await show_project_info(project);
     if (rawProjectData?.reason) {
       notFound();
@@ -86,7 +87,7 @@ export default async function Profil({ params }: { params: { slug: string } }) {
                   {accountData.name}
                 </p>
                 <p className="text-xl text-gray-500 italic">
-                  {jobs.find((val) => val.id == accountData.job).label}
+                  {jobs.find((val) => val.id == accountData.job)?.label}
                 </p>
                 <div className="mt-4">
                   <h3 className="font-semibold text-gray-700 text-xl">
@@ -113,7 +114,12 @@ export default async function Profil({ params }: { params: { slug: string } }) {
                   alt={project.name}
                   className="w-full h-32 rounded-lg object-cover"
                 />
-                <h3 className="font-bold text-lg mt-2">{project.name}</h3>
+                <Link
+                  href={`/project/${project.name}`}
+                  className="font-bold text-lg mt-2 hover:text-red-700"
+                >
+                  {project.name}
+                </Link>
                 <p className="text-gray-600 text-sm">{project.description}</p>
               </div>
             ))}

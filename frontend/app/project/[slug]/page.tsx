@@ -128,7 +128,12 @@ export default async function ProjectDetail({
             <div className="flex flex-wrap">
               {projectData.members.map((member, index) => (
                 <div key={index} className="p-2 border rounded shadow-sm m-2">
-                  <Link href={`/account/${member[0]}`}>{member[1]}</Link>
+                  <Link
+                    className="hover:text-red-700"
+                    href={`/account/${member[0]}`}
+                  >
+                    {member[1]}
+                  </Link>
                 </div>
               ))}
             </div>

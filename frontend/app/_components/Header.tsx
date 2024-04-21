@@ -93,7 +93,7 @@ export default function Header() {
 
         <div className="flex items-center space-x-3">
           <button className="px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-200">
-            <a href="signup">Sign In</a>
+            <Link href="signup">Sign In</Link>
           </button>
           <button className="px-6 py-2 text-white bg-green-600 rounded hover:bg-green-700 transition duration-200">
             Login
